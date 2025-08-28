@@ -358,7 +358,7 @@ def update_episode_display(scene: str, episode: str):
     config = SCENE_CONFIGS.get(scene, {})
     scene_name = config.get("name", "")
     episode_id = int(episode[-1])
-    image_path = os.path.join("scene_assets", f"{scene_name}_{episode_id-1}.jpg")
+    image_path = os.path.join("/media/lenovo/disk/Embodied_AI/InternNav/data/scene_data/gradio_scene_assets/scene_assets", f"{scene_name}_{episode_id-1}.jpg")
     print(f"image_path {image_path}")
     # vaild if file path exists
     if not os.path.exists(image_path):
