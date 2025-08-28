@@ -27,7 +27,7 @@ eval_cfg = EvalCfg(
             'num_history': 8,
             'num_future_steps': 4,
             
-            'device': 'cuda:1',
+            'device': 'cuda:0',
             'predict_step_nums': 32,
             'continuous_traj': True, 
             # debug
@@ -51,7 +51,7 @@ eval_cfg = EvalCfg(
         },
         scene=SceneCfg(
             scene_type='mp3d',
-            scene_data_dir='data/scene_data/mp3d_pe',
+            scene_data_dir='data/scene_data/mp3d_ce',
         ),
         robot_name='h1',
         robot_flash=True, # If robot_flash is True, the mode is flash (set world_pose directly); else you choose physical mode.
@@ -63,7 +63,7 @@ eval_cfg = EvalCfg(
     dataset=EvalDatasetCfg(
         dataset_type="mp3d",
         dataset_settings={
-            'base_data_dir': 'data/vln_pe/raw_data/r2r',
+            'base_data_dir': 'data/vln_ce/raw_data/r2r',
             'split_data_types': ['val_unseen'],  # 'val_seen'
             'filter_stairs': False,      
             # 'selected_scans': ['zsNo4HB9uLZ'],
