@@ -82,7 +82,7 @@ class VLNEvaluator:
         self.infer_scene_id = 0
         self.infer_episode_id = 0
         self.infer_success_cnt = -1
-        self.infer_instruction = ""
+        self.infer_instruction = args.instruction
         self.infer_success = False
         self.env = None
         with habitat.config.read_write(self.config):
@@ -629,6 +629,7 @@ def eval():
     parser.add_argument("--predict_step_nums", type=int, default=16)
     parser.add_argument("--continuous_traj", action="store_true", default=False)
     parser.add_argument("--max_new_tokens", type=int, default=1024)
+    parser.add_argument("--instruction", type=str, default="", help="Instruction text for navigation.")
     
     parser.add_argument('--world_size', default=1, type=int,
                         help='number of distributed processes')
