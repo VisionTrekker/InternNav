@@ -290,12 +290,16 @@ class VLNEvaluator:
         done_res = []
         if True: # fixme
             scenes_keys = list(sorted(self.scene_episode_dict.keys()))
+            if not scenes_keys:
+                raise ValueError("No scenes found in the dataset. Check your dataset configuration and paths.")
+            print("AVAILABLE SCENE KEYS:", list(sorted(self.scene_episode_dict.keys())))
 
             self.infer_success = False
             self.infer_data_ready = False
-            print('---------------current infer scence:', scenes_keys[self.infer_scene_id])
+
             selected_scenes = ['17DRP5sb8fy', 'r1Q1Z4BcV1o', 'dhjEzFoUFzH']
-            key_name = 'data/scene_datasets/mp3d/' + selected_scenes[self.infer_scene_id] + '/' + selected_scenes[self.infer_scene_id] + '.glb'
+            key_name = PROJECT_ROOT_PATH + '/data/scene_data/mp3d_ce/mp3d/' + selected_scenes[self.infer_scene_id - 1] + '/' + selected_scenes[self.infer_scene_id - 1] + '.glb'
+            print('---------------current infer scene:', key_name)
             episodes = self.scene_episode_dict[key_name]
             step_size = len(episodes) // 6
             # episode_id = 0
@@ -586,7 +590,7 @@ class VLNEvaluator:
             metrics = env.get_metrics()
             if self.save_video :
                 images_to_video(
-                    vis_frames, self.output_path, f"res_{self.infer_success_cnt}",fps=6, quality=9
+                    vis_frames, self.output_path, f"res",fps=6, quality=9
                 )
             self.infer_success = True
             vis_frames.clear()
