@@ -673,7 +673,7 @@ def evaluate(model, processor, args):
         epoch=0,
         args=args
     )
-    sucs, spls, oss, nes, ep_num = evaluator.eval_action(idx=get_rank()) 
+    sucs, spls, oss, nes, ep_num = evaluator.run_single_eval() 
 
 
 if __name__ == "__main__":
