@@ -221,6 +221,8 @@ class BackendServer:
                     "--save_video",
                     "--output_path", path,
                     "--instruction", data_dict["instruction"],
+                    "--scene_id", str(data_dict["scene_index"]),
+                    "--episode_id", str(data_dict["episode_index"]),
                 ]
 
                 cwd = PROJECT_ROOT_PATH  

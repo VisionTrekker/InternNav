@@ -79,8 +79,8 @@ class VLNEvaluator:
 
         # for gradio evaluation
         self.infer_data_ready = False
-        self.infer_scene_id = 0
-        self.infer_episode_id = 0
+        self.infer_scene_id = args.scene_id
+        self.infer_episode_id = args.episode_id
         self.infer_success_cnt = -1
         self.infer_instruction = args.instruction
         self.infer_success = False
@@ -630,6 +630,8 @@ def eval():
     parser.add_argument("--continuous_traj", action="store_true", default=False)
     parser.add_argument("--max_new_tokens", type=int, default=1024)
     parser.add_argument("--instruction", type=str, default="", help="Instruction text for navigation.")
+    parser.add_argument("--scene_id", type=int, default=0, help="Scene ID for navigation.")
+    parser.add_argument("--episode_id", type=int, default=0, help="Episode ID for navigation.")
     
     parser.add_argument('--world_size', default=1, type=int,
                         help='number of distributed processes')
