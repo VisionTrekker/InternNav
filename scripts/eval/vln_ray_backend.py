@@ -199,7 +199,8 @@ class BackendServer:
                 print("=======VLN Eval Task=======")
                 cache_dir = f"/tmp/InternNav/.triton"
                 os.makedirs(cache_dir, exist_ok=True)
-                os.chmod(cache_dir, 0o777)  
+                os.chmod(cache_dir, 0o777)
+                os.makedirs(path, exist_ok=True) # Create the output directory for the task  
 
                 env = os.environ.copy()
                 env.update({
@@ -239,35 +240,51 @@ class BackendServer:
             raise HTTPException(status_code=404, detail="Task not found")
 
         task = self.tasks[task_id]
-        if task.status in ["completed", "terminated", "failed"]:
-            
-            video_path = os.path.join(task.result_path, "res.mp4")
-            with open(video_path, 'rb') as f:
-                video_bytes = f.read()
-                video_data = base64.b64encode(video_bytes).decode("utf-8")
 
+        # If task has already failed, report it immediately.
+        if task.status == "failed":
+            return {"status": "failed", "result": task.result_path}
+
+        # If task has already completed or been terminated, try to return the video.
+        if task.status in ["completed", "terminated"]:
+            video_path = os.path.join(task.result_path, "res.mp4")
+            video_data = None
+            if os.path.exists(video_path):
+                with open(video_path, 'rb') as f:
+                    video_bytes = f.read()
+                    video_data = base64.b64encode(video_bytes).decode("utf-8")
             return {"status": task.status, "result": task.result_path, "video": video_data}
 
+        # If the task is still pending, check for updates from Ray.
         if RAY_AVAILABLE and task.ray_future:
             try:
+                # Check if the Ray task is done, with a short timeout.
                 result = ray.get(task.ray_future, timeout=0.2)
                 task.status = "completed"
                 print('task finish!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                 video_path = os.path.join(task.result_path, "res.mp4")
-                with open(video_path, 'rb') as f:
-                    video_bytes = f.read()
-                    video_data = base64.b64encode(video_bytes).decode("utf-8")
+                video_data = None
+                # It's possible the task finished but didn't produce a video.
+                if os.path.exists(video_path):
+                    with open(video_path, 'rb') as f:
+                        video_bytes = f.read()
+                        video_data = base64.b64encode(video_bytes).decode("utf-8")
                 print(f"Task [{task_id}]: {result}")
                 return {"status": "completed", "result": task.result_path, "video": video_data}
             except GetTimeoutError:
+                # This is the normal case for a pending task.
                 return {"status": "pending", "result": task.result_path}
             except Exception as e:
+                # The Ray task threw an exception.
                 import traceback
                 print(traceback.format_exc())
                 task.status = "failed"
+                # Store the error message as the result for diagnosis.
+                task.result_path = str(e)
                 return {"status": "failed", "result": str(e)}
-        else:
-            return {"status": task.status, "result": task.result_path}
+        
+        # Fallback for non-Ray or if future doesn't exist.
+        return {"status": task.status, "result": task.result_path}
             
     
     async def terminate_task(self, task_id: str) -> Dict[str, str]:
