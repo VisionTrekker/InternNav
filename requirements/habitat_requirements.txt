@@ -5,3 +5,4 @@ transformers==4.51.0
 depth-camera-filtering @ git+https://github.com/naokiyokoyama/depth_camera_filtering.git
 accelerate==1.4.0
 flash_attn==2.7.4.post1
+pydantic==2.10.6
