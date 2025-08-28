@@ -618,7 +618,7 @@ def eval():
     parser.add_argument("--local_rank", default=0, type=int, help="node rank")
     parser.add_argument("--model_path", type=str, default="")
     parser.add_argument("--habitat_config_path", type=str, default='scripts/eval/configs/vln_r2r.yaml')
-    parser.add_argument("--eval_split", type=str, default='val_unseen')
+    parser.add_argument("--eval_split", type=str, default='val_seen')
     parser.add_argument("--output_path", type=str, default='./exps_pix/val_unseen/debug_coord_wm')
     parser.add_argument("--num_future_steps", type=int, default=4)
     parser.add_argument("--num_frames", type=int, default=32)
