@@ -183,8 +183,9 @@ class BackendServer:
         background_tasks.add_task(self._submit_task, task_id, request.data, path)
 
         print(f"Start Task: {task_id} for user: {request.user}, task: {request.task}")
-        print('Available GPUs: '+ str(ray.available_resources().get('GPU', 0)))
-        print('Used GPUs: '+ str(ray.cluster_resources().get('GPU', 0) - ray.available_resources().get('GPU', 0)))
+        if RAY_AVAILABLE:
+            print('Available GPUs: '+ str(ray.available_resources().get('GPU', 0)))
+            print('Used GPUs: '+ str(ray.cluster_resources().get('GPU', 0) - ray.available_resources().get('GPU', 0)))
             
         return {"task_id": task_id, "status": "pending"}
 
