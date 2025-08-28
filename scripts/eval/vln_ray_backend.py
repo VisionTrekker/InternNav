@@ -217,6 +217,7 @@ class BackendServer:
                     "--model_path", model_path,
                     "--predict_step_nums", "32",
                     "--continuous_traj",
+                    "--save_video",
                     "--output_path", path,
                     "--instruction", data_dict["instruction"],
                 ]
